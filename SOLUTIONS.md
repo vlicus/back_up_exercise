@@ -2,11 +2,12 @@
 
 ## Back up types
 
-1. Full
 
-2. Incremental
+1. Full: The most basic and comprehensive backup method, where all data is sent to another location.
 
-3. Differential
+2. Incremental: Backs up all files that have changed since the last backup ocurred.
+
+3. Differential: Backs up only copies of all files that have changed since the last full backup.
 
 ## CLI tools to perform back ups (full and incremental) and restores for the databases listed below:
 
