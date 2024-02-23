@@ -17,8 +17,5 @@ Bash scripts are created to automate the backup and restore processes for either
 ### 4. Cron Job Scheduling
 Instructions for scheduling the Bash scripts using cron jobs are outlined. The schedule involves performing a full backup once per week and an incremental backup every day.
 
-## Instructions for Submission
-Ensure all documentation is in Markdown format. Submit the documentation and scripts to a remote repository by the specified deadline.
-
 ## Usage
 Follow the step-by-step instructions in each section to understand backup concepts, perform CLI operations, and automate backups using Bash scripts. Adjust the cron job schedule as needed.
