@@ -22,7 +22,3 @@ Ensure all documentation is in Markdown format. Submit the documentation and scr
 
 ## Usage
 Follow the step-by-step instructions in each section to understand backup concepts, perform CLI operations, and automate backups using Bash scripts. Adjust the cron job schedule as needed.
-
-Feel free to reach out if you have any questions or encounter issues during the exercise.
-
-Good luck!
