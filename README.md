@@ -1,7 +1,7 @@
 # Backup and Restore Automation Exercise
 
 ## Overview
-This repository contains documentation and scripts for an exercise due before Sunday at 20:00 CET. The focus is on understanding backup types (full, incremental, and differential) and utilizing command-line interface (CLI) tools for backup and restore operations in MySQL and MongoDB databases. Additionally, automation of these processes through Bash scripting is implemented, and the scripts are scheduled using cron jobs for periodic backups.
+The focus of this repository is on understanding backup types (full, incremental, and differential) and utilizing command-line interface (CLI) tools for backup and restore operations in MySQL and MongoDB databases. Additionally, automation of these processes through Bash scripting is implemented, and the scripts are scheduled using cron jobs for periodic backups.
 
 ## Contents
 
