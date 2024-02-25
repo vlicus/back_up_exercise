@@ -16,8 +16,43 @@ Most backup strategies start with a complete (full) backup of the MySQL server, 
 
 1. Full MySQL backup
 
-* 
-* 
+To perform a full backup of a MySQL database, it can be used `mysqldump` command, which is a MySQL utility for creating logical backups. It will be use as an example a MySQL database named "example"
+
+```
+mysqldump -u your_username -p your_password example > example_backup.sql
+```
+
+Where:
+`your_username` must be your MySQL username.
+`your_password` must be your MySQL password (empty if there is no password configured).
+`example` is the name of your MySQL database.
+`example_backup.sql` would be the name for your backup file.
+
+Once you run this command, it will prompt you for the MySQL user password and after the password has been provided, it will create a SQL dump file `example_backup.sql` containing the complete structure of the specified MySQL database (example).
+
+If you are running this command on the same machine where MySQL is installed, you might not need to provide `-u`and `-p` options and the command would look like this:
+
+```
+mysqldump example > example_backup.sql
+```
+
+This assumes that your MySQL user has the necessary privileges to access and dump the specified database (example).
+
+A good practice will include the use of different flags that will be mentioned below:
+
+`--single-transaction`: This option ensures that a consisten snapshot of the database is taken, using a single transaction. This is particulary useful for InnoDB tables, as it avoids locking the tables during the backup.
+
+If binary loggin is enabled:
+
+`--flush-logs`: This option causes the server to flush the logs after the backup, ensuring that the binary log files contain the events from the backup.
+
+`--master-data=2`: This option includes the binary log coordinates as a comment at the end of the dump file. The value "2" specifies that it should incluse the file name and position. This information is useful for point-in-time recovery.
+
+The command then would look like this:
+
+```
+mysqldump -u your_username -p your_password --single-transaction --flush-logs --master-data=2 example > example_backup.sql
+```
 
 2. Incremental MySQL backup
 
