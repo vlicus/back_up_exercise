@@ -113,6 +113,91 @@ It can be checked by running `ls -l /var/log/mysql/`
 
 ### MongoDB
 
+MongoDB backups create a BSON files inside the backup directory that represent the collections and documents of the MongoDB database, having `.bson` extension.
+
+#### Full MongoDB backup
+
+In order to perform a full backup in a Mongo database we will need to run the following command:
+
+```
+mongodump --out /path/to/fullbackup/directory
+```
+
+Replace */path/to/fullbackup/directory* with the actual path where you want to store the backup.
+
+`mongodump` is an utility that creates a binary export of the content of the database.
+
+`--out` specify the path where the BSON files will be written for the dumped databases. By default, mongodump saves output files in a directory named `dump` in the current working directory.
+
+This command will create a backup for all databases, if you want to full backup a specific database, you can specify the database name:
+
+```
+mongodump --db example --out /path/to/fullbackup/directory
+```
+
+Being *example* the actual name of the specific database.
+
+If MongoDB server requires authentication, it can be used *-u* for username and *-p* for password flags:
+
+```
+mongodump -u your_username -p your_password --out /path/to/fullbackup/directory
+```
+
+MongoDB also allow us to compress the backup files in order to save space by adding `--gzip` flag:
+
+```
+mongodump --gzip --out /path/to/fullbackup/directory
+```
+
+We can also include a timestamp in the backup directory name like this:
+
+```
+mongodump --out /path/to/backup/directory/example_$(date +"%Y%m%d_%H%M%S")
+```
+
+This will looks like example_*20240225_174530* for *February 25, 2024, at 17:45:30*
+
+#### Incremental 
+
+To create an incremental backup we just need to add -- oplog flag at the end of the comand
+
+```
+mongodump -- out /path/to/incremental/backup/directory -- oplog
+```
+
+#### Restoring DB
+
+1. MySQL
+
+Restoring from a full backup: 
+mysql -u username -p dbname < full_backup.sql
+
+Restoring from an incremental backup:
+
+We can start doing incremental backup recoveries once a full backup recovery has been performed (see Restoring from a full backup). Then, with the use of the following command, we will start recovering the database from the *--start-position=xxx* and its source file */path/to/mysql-bin.00000x*:
+
+```
+mysqlbinlog --start-position=xxx /path/to/mysql-bin.00000x | mysql -u username -p dbname
+```
+
+If the incremental backup spawns multiple binary logs, we need to apply them in sequence:
+
+```
+mysqlbinlog --start-position=yyy /path/to/mysql-bin.0000yy | mysql -u username -p dbname
+```
+
+Setting up *--start-position* and the source path *0000yy* as the first binary log file right after the full backup file.
+
+2. MongoDB
+
+Restoring with MongoDB we just need the use of the following command:
+
+```
+mongorestore --oplogReplay /path/to/incremental/backup
+```
+
+`--oplogReplay` This option indicates that the oplog should be replayed during the restoration process. The oplog is a capped collection in MongoDB that records all write operations. By replaying the oplog, you can apply changes to the database to reach a specific point in time.
+
 ## Automate the backups from section 2 using bash scripting (either MySQL or MongoDB).
 
 ## Schedule the scripts from section 3 using cron job to perform a full backup once a week and an incremental backup every day.
