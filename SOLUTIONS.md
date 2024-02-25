@@ -200,4 +200,62 @@ mongorestore --oplogReplay /path/to/incremental/backup
 
 ## Automate the backups from section 2 using bash scripting (either MySQL or MongoDB).
 
+### MySQL
+
+The bash script for automating full back up would look like:
+
+```
+#!/bin/bash
+
+# Set the backup directory with the current date as the subfolder name
+DIR=$(date +%Y%m%d_%H%M%S)
+DEST=~/db_backups/$DIR
+mkdir -p $DEST
+
+# Replace the placeholders with your MySQL server details
+MYSQL_HOST="localhost"
+MYSQL_USER="your_username"
+MYSQL_PASSWORD="your_password"
+DATABASE_NAME="example"
+
+# Use mysqldump to create a SQL backup file for the specified database
+mysqldump -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD $DATABASE_NAME > $DEST/${DATABASE_NAME}_full_backup.sql
+
+# Optionally compress the backup
+gzip $DEST/${DATABASE_NAME}_full_backup.sql
+
+echo "Full backup of $DATABASE_NAME completed. Backup stored in: $DEST"
+```
+
+In order to perform an incremental backup script, we need to keep in mind that it will need to start from a certain position in the binary log, so the script will look like the following:
+
+```
+#!/bin/bash
+
+# Set the backup directory with the current date as the subfolder name
+DIR=$(date +%Y%m%d_%H%M%S)
+DEST=~/db_backups/$DIR
+mkdir -p $DEST
+
+# Replace the placeholders with your MySQL server details
+MYSQL_HOST="localhost"
+MYSQL_USER="your_username"
+MYSQL_PASSWORD="your_password"
+DATABASE_NAME="example"
+
+# Get the latest binary log file and position
+LATEST_STATUS=$(mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SHOW MASTER STATUS;" 2>/dev/null)
+LATEST_FILE=$(echo "$LATEST_STATUS" | awk 'NR==2 {print $1}')
+LATEST_POSITION=$(echo "$LATEST_STATUS" | awk 'NR==2 {print $2}')
+
+# Use mysqlbinlog to capture changes since the last backup
+mysqlbinlog --start-position=$LATEST_POSITION /var/log/mysql/$LATEST_FILE > $DEST/${DATABASE_NAME}_incremental_backup.sql
+
+# Optionally compress the incremental backup
+gzip $DEST/${DATABASE_NAME}_incremental_backup.sql
+
+echo "Incremental backup of $DATABASE_NAME completed. Backup stored in: $DEST"
+
+```
+
 ## Schedule the scripts from section 3 using cron job to perform a full backup once a week and an incremental backup every day.
