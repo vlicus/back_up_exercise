@@ -258,6 +258,13 @@ echo "Incremental backup of $DATABASE_NAME completed. Backup stored in: $DEST"
 
 ```
 
+Make sure that both scripts have executable permissions, if not, give them the permission by using the following command:
+
+```
+sudo chmod +x full_backup_scrip.sh
+sudo chmod +x incremental_backup_script.sh
+```
+
 ## Schedule the scripts from section 3 using cron job to perform a full backup once a week and an incremental backup every day.
 
 In order to perform this backups as detailed, we need to modify the crontab file with `crontab -e` just by adding the following lines at the end of the crontab file:
