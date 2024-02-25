@@ -14,7 +14,7 @@
 
 Most backup strategies start with a complete (full) backup of the MySQL server, from which you can restore all databases and tables. After you have created a full backup, you might perform incremental backups (which are smaller and faster) for the next several backup tasks. You then make a full backup periodically to begin the cycle again.
 
-1. Full MySQL backup
+#### Full MySQL backup
 
 To perform a full backup of a MySQL database, it can be used `mysqldump` command, which is a MySQL utility for creating logical backups. It will be use as an example a MySQL database named "example"
 
@@ -56,7 +56,7 @@ mysqldump -u your_username -p your_password --single-transaction --flush-logs --
 
 Other graphical user interfaces and third-party tools such as phpMyAdmin or MySQL Workbench can be used but in this repository we will only focus on CLI tools.
 
-2. Incremental MySQL backup
+#### Incremental MySQL backup
 
 As mentioned before, incremental MySQL backups can NOT be done if we have not performed any other backup previously and it needs the use of binary logging records.
 
