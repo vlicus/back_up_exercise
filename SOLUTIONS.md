@@ -46,7 +46,7 @@ If binary loggin is enabled:
 
 `--flush-logs`: This option causes the server to flush the logs after the backup, ensuring that the binary log files contain the events from the backup.
 
-`--master-data=2`: This option includes the binary log coordinates as a comment at the end of the dump file. The value "2" specifies that it should incluse the file name and position. This information is useful for point-in-time recovery.
+`--master-data=2`: This option includes the binary log coordinates as a comment at the end of the dump file. The value "2" specifies that it should incluse the file name and position. This information is useful for point-in-time recovery. `--master-data` seems that is deprecated and it will be removed in future versions, instead, it can be used `--source-data=2` in our example.
 
 The command then would look like this:
 
