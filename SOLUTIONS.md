@@ -259,3 +259,18 @@ echo "Incremental backup of $DATABASE_NAME completed. Backup stored in: $DEST"
 ```
 
 ## Schedule the scripts from section 3 using cron job to perform a full backup once a week and an incremental backup every day.
+
+In order to perform this backups as detailed, we need to modify the crontab file with `crontab -e` just by adding the following lines at the end of the crontab file:
+
+```
+# Schedule Full Backup every Sunday at 2:00 AM
+0 2 * * 0 /path/to/full_backup_script.sh
+
+# Schedule Incremental Backup every day at 3:00 AM
+0 3 * * * /path/to/incremental_backup_script.sh
+```
+
+In this example:
+
+> The full backup script will run every Sunday at 2:00 AM.
+> The incremental backup script will run every day at 3:00 AM.
