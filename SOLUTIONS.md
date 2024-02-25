@@ -58,8 +58,58 @@ Other graphical user interfaces and third-party tools such as phpMyAdmin or MySQ
 
 2. Incremental MySQL backup
 
-* 
-* 
+As mentioned before, incremental MySQL backups can NOT be done if we have not performed any other backup previously and it needs the use of binary logging records.
+
+In order to enable binary logging, we need to modify the MySQL default configuration file, often located at `/etc/mysql/my.cnf or /etc/my.cnf`.
+
+With your favourite text editor we will modify or add the following lines, in this case we will use `nano` text editor:
+
+```
+log_bin = /var/log/mysql/mysql-bin.log
+```
+
+> Replace `/var/log/mysql/` with the desired path for your binary log.
+
+Then we should restart MySQL to apply the changes with the following command:
+
+```
+service mysql restart
+```
+
+Now we can perform an incremental backup.
+
+First we need to find the `--start-position` of the binlog position from the last backup. In order to do so, we need to run this command:
+
+```
+SHOW MASTER STATUS;
+```
+
+It will give us information about the current binlog file name and its position.
+
+Secondly we need to run the following command:
+
+```
+mysqlbinlog --start-position=xxx /var/log/mysql/mysql-bin.00000x >> example_backup.sql
+```
+
+Replacing "xxx" with the actual position of the binlog and "x" in "00000x" with the sequence number of the same file that you want to work with. An example would be (position:2 / sequence number:2):
+
+```
+mysqlbinlog --start-position=2 /var/log/mysql/mysql-bin.000002 >> example_backup.sql
+```
+
+> `>>` Is also for output redirection, but it appends the output to the  end of an existing file or creates a new file that does not exists.
+
+In the case scenario that the binary logging file has been enabled before the full backup performance and the `mysqldump` command has been ran with the flag `--flush-logs` to close the current logs (mysql-bin.000001) and create a new one (mysql-bin.000002), we can just simply take an incremental backup by flushing the binary logs and saving the binary logs created from the last full backup by running the following command:
+
+```
+mysqladmin -uroot -p flush-logs
+```
+
+This will close the `mysql-bin.000002` and create a new one (`mysql-bin.000003`).
+
+It can be checked by running `ls -l /var/log/mysql/`
+
 
 ### MongoDB
 
