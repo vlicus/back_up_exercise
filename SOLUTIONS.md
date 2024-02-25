@@ -54,6 +54,8 @@ The command then would look like this:
 mysqldump -u your_username -p your_password --single-transaction --flush-logs --master-data=2 example > example_backup.sql
 ```
 
+Other graphical user interfaces and third-party tools such as phpMyAdmin or MySQL Workbench can be used but in this repository we will only focus on CLI tools.
+
 2. Incremental MySQL backup
 
 * 
